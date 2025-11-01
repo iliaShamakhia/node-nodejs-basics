@@ -10,16 +10,14 @@ const list = async () => {
   let filesDir;
 
   try{
-    filesDir = await fs.opendir(sourceDir);
-    await printFiles(sourceDir);
+    filesDir = await fs.readdir(sourceDir);
+    console.log(filesDir)
   }catch(e){
     throw new Error("FS operation failed");
-  }finally{
-    await filesDir?.close();
   }
 };
 
-let depth = "";//I use this variable to add space and '-' characters, to better show deeply nested folder structures.
+/* let depth = "";//I use this variable to add space and '-' characters, to better show deeply nested folder structures.
 
 const printFiles = async (src) => {
 
@@ -39,6 +37,6 @@ const printFiles = async (src) => {
       depth = depth.substring(0, depth.length - 1);
     }
   }
-};
+}; */
 
 await list();

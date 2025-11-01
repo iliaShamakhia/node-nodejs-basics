@@ -24,7 +24,8 @@ const copy = async () => {
     throw new Error("FS operation failed");
   }catch(e){
     if(e.code === 'ENOENT'){
-      await copyDirectory(sourceDir, destinationDir);
+      await fs.mkdir(destinationDir);
+      await fs.cp(sourceDir, destinationDir, {recursive: true, force: false, errorOnExist: true})
     }else{
       throw e;
     }
@@ -32,21 +33,5 @@ const copy = async () => {
     await filesCopyDir?.close();
   }
 };
-
-const copyDirectory = async (src, dest) => {
-  await fs.mkdir(dest);
-  let handle = await fs.opendir(src);
-  
-  for await (const child of handle) {
-    const srcPath = path.join(src, child.name);
-    const destPath = path.join(dest, child.name);
-
-    if (child.isDirectory()) {
-      await copyDirectory(srcPath, destPath);
-    } else if (child.isFile()) {
-      await fs.copyFile(srcPath, destPath);
-    }
-  }
-}
 
 await copy();

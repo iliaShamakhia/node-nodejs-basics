@@ -12,11 +12,10 @@ const write = async () => {
 
   process.stdin.setEncoding('utf8');
 
-  process.stdin.on('data', chunk => {
-    if (chunk.trim() === 'exit') {
-      process.stdin.unpipe(writableStream);
-      writableStream.end();
-    }
+  process.on("SIGINT", () => {
+    console.log('Data has been written to fileToWrite.txt');
+    writableStream.end();
+    process.exit(0);
   });
 
   writableStream.on('finish', () => {
@@ -27,7 +26,7 @@ const write = async () => {
     console.error('Error writing to file:', err.message);
   });
 
-  console.log("type 'exit' and press Enter to finish");
+  console.log("press Ctrl + c to exit");
 };
 
 await write();
